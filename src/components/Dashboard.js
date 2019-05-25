@@ -4,6 +4,7 @@ import moment from 'moment';
 
 import DashboardStatistic from './DashboardStatistic';
 import DashboardChart from './DashboardChart';
+import Container from '@material-ui/core/Container';
 
 const getCuisineStatistics = function (restaurants) {
   return _.chain(restaurants)
@@ -51,21 +52,13 @@ class Dashboard extends Component {
     const cuisineStatistics = getCuisineStatistics(this.props.restaurants)
 
     return (
-        <div>
-          <div className='fill-green'>
-            <div className='container'>
-              <DashboardStatistic statistics={ addRandomId(generalStatistics) } />
-              <DashboardChart { ...this.props } name='Yearly' />
-            </div>
-          </div>
+      <Container>
+        <DashboardStatistic statistics={ addRandomId(generalStatistics) } />
+        <DashboardChart { ...this.props } name='Yearly' />
 
-          <div className='fill-blue'>
-            <div className='container'>
-              <DashboardStatistic statistics={ addRandomId(cuisineStatistics) } />
-              <DashboardChart { ...this.props } name='Cuisine'/>
-            </div>
-          </div>
-        </div>
+        <DashboardStatistic statistics={ addRandomId(cuisineStatistics) } />
+        <DashboardChart { ...this.props } name='Cuisine'/>
+      </Container>
     )
   }
 }
