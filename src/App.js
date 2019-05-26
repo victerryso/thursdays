@@ -1,46 +1,62 @@
 import React, { Component } from 'react';
 
 import Header from './components/Header'
-import Dashboard from './components/Dashboard'
-import Table from './components/Table'
 import GoogleMap from './components/GoogleMap'
-import Navigation from './components/Navigation'
+import Loading from './components/Loading'
+import PageOne from './pages/PageOne'
+import PageTwo from './pages/PageTwo'
+import Table from './pages/Table'
 
 import getRestaurants from './methods/get-restaurants-json'
 
 class App extends Component {
   state = {
-    page: 'dashboard',
-    restaurants: []
+    page: 'home',
+    items: []
+  }
+
+  switchToHome() {
+    this.setState({ page: 'home' })
+  }
+
+  switchToTable() {
+    this.setState({ page: 'table' })
   }
 
   componentWillMount() {
-    getRestaurants.then(restaurants => {
+    getRestaurants.then(items => {
       this.setState({
-        restaurants
+        items
       })
     })
   }
 
-  handleChange(page) {
-    this.setState({
-      page
-    })
-  }
-
   render() {
-    const { page, restaurants } = this.state
+    const { items, page } = this.state
+
+    const complete = !!items.length
+
+    let main = page === 'table' ? (
+      <Table items={items} />
+    ) : (
+      <div>
+        <PageOne items={items} />
+        <PageTwo items={items} />
+        <GoogleMap items={items} />
+      </div>
+    )
 
     return (
-      <main>
-        <Header />
+      <div>
+        <Header
+          switchToHome={this.switchToHome.bind(this)}
+          switchToTable={this.switchToTable.bind(this)}
+        />
 
-        {page === 'dashboard' && restaurants.length && <Dashboard restaurants={restaurants} />}
-        {page === 'table'     && restaurants.length && <Table     restaurants={restaurants} />}
-        {page === 'map'       && restaurants.length && <GoogleMap restaurants={restaurants} />}
+        {complete && main}
 
-        <Navigation onChange={this.handleChange.bind(this)} />
-      </main>
+        <Loading complete={complete} />
+      </div>
     )
   }
 }

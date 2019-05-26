@@ -23,10 +23,10 @@ class DashboardChart extends Component {
         const data = _.map(categories, year => count[year] || 0)
 
         return {
-          chart: { type: 'column' },
+          chart: { type: 'bar' },
           title: { text: null },
-          xAxis: { categories: categories },
-          yAxis: { title: { text: 'No. Nights' } },
+          xAxis: { categories },
+          yAxis: { title: { text: 'No. Nights' }, allowDecimals: false, max: 50 },
           series: [{ name: 'Year', data: data, colorByPoint: true }]
         }
       }

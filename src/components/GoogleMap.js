@@ -1,15 +1,64 @@
 import React, { Component } from 'react'
 import _ from 'underscore'
+import styles from './SnazzyMap.json'
 
 const google = window.google
 
 const style = {
   width: '100%',
-  height: '100%',
+  height: '100vh',
 }
 
 class GoogleMap extends Component {
   popups = [];
+
+  startDropping() {
+    let items = this.props.items.filter(item => {
+      return item.latitude && item.longitude
+    })
+
+    let index = 0
+    let popups = []
+
+    this.interval = setInterval(() => {
+      let item = items[index]
+
+      if (!item) {
+        return this.stopDropping()
+      }
+
+      const marker = new google.maps.Marker({
+        map: this.map,
+        title: item.name,
+        animation: google.maps.Animation.DROP,
+        position: {
+          lat: +item.latitude,
+          lng: +item.longitude,
+        }
+      });
+
+      const popup = new google.maps.InfoWindow({
+        content: `
+          <strong>${item.name}</strong><br/>
+          ${item.address}, ${item.suburb}<br/>
+          ${_.times(item.rating, () => '★').join('')}
+        `
+      });
+
+      google.maps.event.addListener(marker, 'click', function() {
+        popups.forEach(popup => popup.close())
+        popup.open(this.map, marker);
+      });
+
+      popups.push(popup)
+
+      index++
+    }, 10000 / items.length)
+  }
+
+  stopDropping() {
+    clearInterval(this.interval)
+  }
 
   componentDidMount(a,b) {
     const center = {
@@ -17,53 +66,22 @@ class GoogleMap extends Component {
       lng: 151.2093,
     };
 
-    const map = new google.maps.Map(document.getElementById('map'), {
+    const map = document.getElementById('map')
+
+    this.map = new google.maps.Map(map, {
       center,
-      zoom: 13
+      styles,
+      zoom: 13,
     });
 
-    let restaurants = this.props.restaurants.filter(restaurant => {
-      return restaurant.latitude && restaurant.longitude
-    })
 
-    let index = 0
-    let popups = []
+    window.onscroll = () => {
+      if (window.scrollY > map.getBoundingClientRect().top) {
+        this.startDropping()
 
-    this.interval = setInterval(() => {
-      let restaurant = restaurants[index]
-
-      if (!restaurant) {
-        return clearInterval(this.interval)
+        window.onscroll = undefined
       }
-
-      const marker = new google.maps.Marker({
-        map,
-        title: restaurant.name,
-        animation: google.maps.Animation.DROP,
-        position: {
-          lat: +restaurant.latitude,
-          lng: +restaurant.longitude,
-        }
-      });
-
-      const popup = new google.maps.InfoWindow({
-        content: `
-          <strong>${restaurant.name}</strong><br/>
-          ${restaurant.address}, ${restaurant.suburb}<br/>
-          ${_.times(restaurant.rating, () => '★').join('')}
-        `
-      });
-
-      google.maps.event.addListener(marker, 'click', function() {
-        popups.forEach(popup => popup.close())
-        popup.open(map, marker);
-      });
-
-      popups.push(popup)
-
-      index++
-    }, 10000 / restaurants.length)
-
+    };
   }
 
   componentWillUnmount() {
@@ -72,7 +90,7 @@ class GoogleMap extends Component {
 
   render() {
     return (
-      <div id="map" style={style}/>
+      <div id="map" style={style} />
     )
   }
 }

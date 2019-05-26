@@ -52,7 +52,7 @@ class Dashboard extends Component {
     const cuisineStatistics = getCuisineStatistics(this.props.restaurants)
 
     return (
-      <Container>
+      <Container maxWidth='md'>
         <DashboardStatistic statistics={ addRandomId(generalStatistics) } />
         <DashboardChart { ...this.props } name='Yearly' />
 
