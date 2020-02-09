@@ -3,8 +3,9 @@ import React, { Component } from 'react';
 import Header from './components/Header'
 import GoogleMap from './components/GoogleMap'
 import Loading from './components/Loading'
-import PageOne from './pages/PageOne'
-import PageTwo from './pages/PageTwo'
+import NightsCount from './pages/NightsCount'
+import BarChart from './pages/BarChart'
+import ImageGrid from './pages/ImageGrid'
 import Table from './pages/Table'
 
 import getRestaurants from './methods/get-restaurants-json'
@@ -40,8 +41,9 @@ class App extends Component {
       <Table items={items} />
     ) : (
       <div>
-        <PageOne items={items} />
-        <PageTwo items={items} />
+        <NightsCount items={items} />
+        <BarChart items={items} />
+        <ImageGrid items={items} />
         <GoogleMap items={items} />
       </div>
     )

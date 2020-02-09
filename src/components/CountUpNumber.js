@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { CountUp } from 'countup.js';
+import Typography from '@material-ui/core/Typography';
 
 class CountUpNumber extends Component {
   id = Math.random().toString(36).substr(2, 10)
@@ -13,14 +14,16 @@ class CountUpNumber extends Component {
   }
 
   render() {
-    const { value, size } = this.props
-
-    const style = {
-      fontSize: size,
-    }
+    const { value, style, variant } = this.props
 
     return (
-      <div id={this.id} style={style}>{value}</div>
+      <Typography
+        id={this.id}
+        variant={variant}
+        style={style}
+      >
+        {value}
+      </Typography>
     );
   }
 }

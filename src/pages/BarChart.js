@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Typography from '@material-ui/core/Typography';
 import Section from '../components/Section'
-import colors from './colors'
+import BarData from '../components/BarData'
+import colors from '../lib/colors'
 import _ from 'underscore';
 import moment from 'moment';
 
@@ -37,28 +38,21 @@ const styles = {
   }
 }
 
-class PageTwo extends Component {
+class BarChart extends Component {
   state = {
     rendered: false
-  }
-
-  createGradient(index) {
-    let color = _.values(colors)[index]
-
-    return `linear-gradient(-225deg,
-      ${color[50]} 0%,
-      ${color[100]} 20%,
-      ${color[200]} 40%,
-      ${color[300]} 60%,
-      ${color[400]} 80%,
-      ${color[500]} 100%
-    )`
   }
 
   componentDidMount() {
     this.setState({
       rendered: true
     })
+  }
+
+  getColor(index) {
+    let values = Object.values(colors)
+
+    return values[index % values.length]
   }
 
   render() {
@@ -80,27 +74,26 @@ class PageTwo extends Component {
         year,
         value: count[year],
         width: rendered ? `${count[year] / 50 * 100}%` : 0,
-        background: this.createGradient(index),
       }))
       .value()
 
     return (
       <Section>
 
-        {years.map(({ year, value, width, background }, index) => (
-        <div key={index} style={styles.row}>
+        {years.map(({ year, value, width }, index) => (
+          <div key={index} style={styles.row}>
 
-          <div style={styles.label}>
-            <Typography variant='h5'>{year}</Typography>
-          </div>
-
-          <div style={styles.paperContainer}>
-            <div style={{...styles.paper, background, width: width}}>
-              <Typography variant='h6' style={styles.value}>{value}</Typography>
+            <div style={styles.label}>
+              <Typography variant='h5'>{year}</Typography>
             </div>
-          </div>
 
-        </div>
+            <BarData
+              color={this.getColor(index)}
+              value={value}
+              width={width}
+            />
+
+          </div>
         ))}
 
       </Section>
@@ -108,7 +101,7 @@ class PageTwo extends Component {
   }
 }
 
-export default PageTwo;
+export default BarChart;
 
 
 

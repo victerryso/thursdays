@@ -15,7 +15,7 @@ const style = {
   }
 }
 
-class PageOne extends Component {
+class NightsCount extends Component {
   render() {
     const { items } = this.props
 
@@ -26,11 +26,15 @@ class PageOne extends Component {
       .first()
       .value()
 
-    const displayDate = moment(date).format('MMMM, YYYY')
+    const displayDate = moment(date).format('MMMM YYYY')
 
     return (
       <Section style={style.section}>
-        <CountUpNumber value={items.length} size={128} />
+        <CountUpNumber
+          value={items.length}
+          variant='h3'
+          style={{fontSize: '10rem'}}
+        />
 
         <Typography variant='h4' style={style.label}>
           Nights since <strong>{displayDate}</strong>
@@ -40,5 +44,5 @@ class PageOne extends Component {
   }
 }
 
-export default PageOne;
+export default NightsCount;
 

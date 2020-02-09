@@ -12,7 +12,7 @@ const styles = {
     height: '100%',
     width: '100%',
     background: `linear-gradient(120deg, #a6c0fe 0%, #f68084 100%)`,
-    transition: `opacity 1000ms linear`,
+    transition: `opacity 1000ms ease-in-out`,
   },
 
   complete: {
@@ -25,7 +25,7 @@ const styles = {
     height: '100%',
     width: '100%',
     background: `linear-gradient(120deg, #a6c0fe 0%, #f68084 100%)`,
-    transition: `opacity 1000ms linear`,
+    transition: `opacity 1000ms ease-in-out`,
     opacity: 0,
     zIndex: -1
   },
